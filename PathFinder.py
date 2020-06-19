@@ -27,15 +27,15 @@ class Node():
     def Adjency_list(self):
         '''This Function return the list of all adjacent element
             of the current node.'''
-        global Screen_height,Screen_width
+        global Screen_height,Screen_width,wall_list
         adjency_list = []
-    
-        for i in (1,0,-1):
-            for j in (1,0,-1):
-                if not i == j == 0:
-                    if 0 <= self.position[0]+i <(Screen_width//block_size)+1 and 0 <= self.position[1]+j < (Screen_width//block_size)+1:
-                        if (self.position[0] + i,self.position[1] + j) not in wall_list: 
-                            adjency_list.append((self.position[0] + i,self.position[1] + j))
+        test_list = [(1,0),(-1,0),(0,1),(0,-1)]
+        for i,j in test_list:
+            if (self.position[0]+i, self.position[1]+j) not in wall_list:
+                if 0<= self.position[0]+i <= Screen_width-1 and 0 <= self.position[1]+j <= Screen_height-1:
+                    adjency_list.append((self.position[0]+i, self.position[1]+j))
+                    
+        
 
         return adjency_list
 
@@ -117,6 +117,8 @@ def Mouse_action(position):
         node.visualize((0,0,0))
         wall_list.append(node.position)
 
+
+
     
 loop = True
 while loop:
@@ -178,13 +180,11 @@ def main():
             for i in range(len(current_node.Adjency_list())):
                 new_node = Node(current_node,current_node.Adjency_list()[i])
                 if  new_node not in closed_list:
-                            
-                    if new_node.position[0] == current_node.position[0] or new_node.position[1] == current_node.position[1]:
-                        tempg = current_node.g + 10
-                    else:
-                        tempg = current_node.g + 14
+
+                    tempg = current_node.g + 10
                     
                     new_node.h = int(sqrt((end_node.position[1]-new_node.position[1])*(end_node.position[1]-new_node.position[1]) + (end_node.position[0]-new_node.position[0])*(end_node.position[0]-new_node.position[0]))*10)
+                    
                     new_node.f = new_node.g + new_node.h
                     if new_node in open_list:
                         if new_node.g > tempg:
@@ -209,9 +209,6 @@ while not stop:
         else:
             pass
         main()
-    #else:
-        #break
-
 
 
 
